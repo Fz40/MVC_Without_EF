@@ -1,0 +1,265 @@
+﻿
+
+@{
+    ViewData["Title"] = "Category";
+}
+
+@using (Html.BeginForm("GetCategoryByName", "Category", FormMethod.Get))
+{
+    <div class="row">
+        <div class="col-md-12 col-sm-12 ">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2><i class="fa fa-search"></i> Search Area </h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li>
+                            <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                        </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    <br />
+                    <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+                        <div class="item form-group">
+                            <label class="col-form-label col-md-2 col-sm-2 label-align">
+                                Category Name
+                            </label>
+                            <div class="col-md-6 col-sm-6 ">
+                                @Html.TextBox("Categoryname", "", new { @class = "form-control" , @placeholder = "Category Name" })
+                            </div>
+                        </div>
+                        <div class="ln_solid"></div>
+                        <div class="row"></div>
+                        <div class="item form-group">
+                            <div class="col-md-offset-0 text-right col-sm-12">
+                                <button type="button" class="btn btn-success btn-label-left fancybox" id="btnCreate" data-fancybox data-type="iframe" data-src="/Category/Create">
+                                    Create
+                                </button>
+                                <button type="button" class="btn btn-primary" id="btnSearch">
+                                    Search
+                                </button>
+                                <button type="button" class="btn btn-secondary" id="BtnClear">
+                                    Clear
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 ">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2><i class="fa fa-database"></i> Data Area </h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li>
+                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <br />
+                <table class="table table-bordered table-responsive-sm" id="CategoryTable">
+                    <thead>
+                        <tr>
+                            <th>
+                                <p>Category ID</p>
+                            </th>
+                            <th>
+                                <p>Category Name</p>
+                            </th>
+                            <th>
+                                <p>Description</p>
+                            </th>
+
+                            <th>
+                                <p>Action</p>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts{
+
+    <script type="text/javascript">
+
+        function actionEdit(id) {
+
+            $('.fancybox').fancybox({
+                arrows: false,
+                closeBtn: false,
+                fitToView: false,
+                closeClick: false,
+                openEffect: 'none',
+                closeEffect: 'none',
+                helpers: {
+                    overlay: {
+                        locked: false
+                    }
+                },
+                afterClose: function () {
+                    location.reload();
+                }
+            });
+
+        };
+
+        $(document).ready(function () {
+
+            $('#CategoryTable').DataTable({
+                //ให้แสดง loading ระหว่างดึงข้อมูล
+                language: {
+                    loadingRecords: '<span style="width:100%;"><img src="/Content/images/Loding.gif"></span>',
+                    processing: '<span style="width:100%;"><img src="/Content/images/Loding.gif"></span>',
+                    zeroRecords: "Nothing found - sorry",
+                    infoEmpty : "No records available"
+                },
+                // กำหนดให้เป็นแบบ server side
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: "/Category/GetCategoryAll",
+                    type: "POST",
+                    dataType: "JSON",
+                },
+                // กำหนดให้เรียง colunm ไหน เรียงแบบไหน
+                order: [[0, "asc"]],
+                // กำหนดค่าให้แต่ละ คอลลัม เฉพาะ คอลลัมที่ต้องการ
+                columnDefs:
+                    [{
+                        "targets": [0],
+                        "visible": false,
+                        "searchable": false
+                    }],
+                // กำหนด คอลลัม ที่ต้องการนำมาแสดง พร้อมตั้งชื่อ colunm (ตั้งชื่อให้เหมือนกันฟิวส์ที่ส่งมา จะไม่ใช่ชื่อที่แสดงบนหัวใน web)
+                columns: [
+                    { data: "CategoryID", "name":"CategoryID" },
+                    { data: "CategoryName", "name": "CategoryName" },
+                    { data: "Description", "name": "Description" },
+                    {
+                        "render": function (data, type, full, meta) {
+                            return '<a data-fancybox data-type="iframe" data-src="/Category/Detail/' + full.CategoryID + '"  class="btn btn-outline-primary btn-sm fancybox" href="#"><i class="fa fa-file-text-o"></i>&nbsp;View</a>  <a data-fancybox data-type="iframe" data-src="/Category/Edit/' + full.CategoryID + '" class="btn btn-outline-info btn-sm fancybox" href="#"  ><i class="fa fa-edit"></i>&nbsp;Edit</a><a data-fancybox data-type="iframe" data-src="/Category/Detail/' + full.CategoryID + '" class="btn btn-outline-danger btn-sm fancybox" href="#"><i class="fa fa-trash-o"></i>&nbsp;Delete</a>';
+                        }
+                    },
+                ],
+                initComplete : function (settings, json) {
+                    $('.fancybox').fancybox({
+                        arrows: false,
+                        closeBtn: false,
+                        fitToView: false,
+                        closeClick: false,
+                        openEffect: 'none',
+                        closeEffect: 'none',
+                        helpers: {
+                            overlay: {
+                                locked: false
+                            }
+                        },
+                        afterClose: function () {
+                            location.reload();
+                        }
+                    });
+                }
+            });
+
+            $('#btnSearch').click(function () {
+                var table = $('#CategoryTable').DataTable();
+                table.destroy();
+                Search()
+            });
+
+   
+                $('.fancybox').fancybox({
+                    arrows: false,
+                    closeBtn: false,
+                    fitToView: false,
+                    closeClick: false,
+                    openEffect: 'none',
+                    closeEffect: 'none',
+                    helpers: {
+                        overlay: {
+                            locked: false
+                        }
+                    },
+                    afterClose: function () {
+                        location.reload();
+                    }
+                });
+ 
+
+
+
+            function Search() {
+                var name = $("#Categoryname").val();
+                var table = $('#CategoryTable').DataTable({
+                    //ให้แสดง loading ระหว่างดึงข้อมูล
+                    language: {
+                        loadingRecords: '<span style="width:100%;"><img src="/images/Loding.gif"></span>'
+                    },
+                    ajax: {
+                        url: "/Category/GetCategoryByName",
+                        data: {
+                            "search": name
+                        },
+                        dataSrc: "",
+                        type: "POST",
+                        dataType: "JSON",
+                    },
+                    // กำหนดค่าให้แต่ละ คอลลัม เฉพาะ คอลลัมที่ต้องการ
+                    columnDefs:
+                        [{
+                            "targets": [0],
+                            "visible": false,
+                            "searchable": false
+                        }],
+                    // กำหนด คอลลัม ที่ต้องการนำมาแสดง
+                    columns: [
+                        { data: "CategoryID" },
+                        { data: "CategoryName" },
+                        { data: "Description" },
+                        {
+                            "render": function (data, type, full, meta) {
+                                return '<a data-fancybox data-type="iframe" data-src="/Category/Detail/' + full.CategoryID + '" class="fancybox btn btn-outline-primary btn-sm" href="#"><i class="fa fa-file-text-o"></i>&nbsp;View</a>  <a data-fancybox data-type="iframe" data-src="/Category/Edit/' + full.CategoryID + '" class="btn btn-outline-info btn-sm fancybox" href="#"><i class="fa fa-edit"></i>&nbsp;Edit</a><a data-fancybox data-type="iframe" data-src="/Category/Detail/' + full.CategoryID + '" class="btn btn-outline-danger btn-sm fancybox" href="#"><i class="fa fa-trash-o"></i>&nbsp;Delete</a>';
+                            }
+                        },
+
+                    ],
+                    initComplete: function (settings, json) {
+                        $('.fancybox').fancybox({
+                            arrows: false,
+                            closeBtn: false,
+                            fitToView: false,
+                            closeClick: false,
+                            openEffect: 'none',
+                            closeEffect: 'none',
+                            helpers: {
+                                overlay: {
+                                    locked: false
+                                }
+                            },
+                            afterClose: function () {
+                                location.reload();
+                            }
+                        });
+                    }
+                });
+
+                table.ajax.reload();
+            };
+        })
+
+    </script>
+}

@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <environment include="Development">
+        <!-- Bootstrap -->
+        <link href="~/Content/MainPage/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="~/Content/MainPage/vendors/bootstrap/dist/css/bootstrap-reboot.min.css" rel="stylesheet" />
+        <link href="~/Content/MainPage/vendors/bootstrap/dist/css/bootstrap-grid.min.css" rel="stylesheet" />
+        <!-- Font Awesome -->
+        <link href="~/Content/MainPage/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+        <!-- bootstrap-progressbar -->
+        <link href="~/Content/MainPage/vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css" rel="stylesheet">
+        <!-- bootstrap-daterangepicker -->
+        <link href="~/Content/MainPage/vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+    </environment>
+</head>
+<body>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer></footer>
+    </div>
+
+    <environment include="Development">
+        <!-- jQuery -->
+        <script src="~/Content/MainPage/vendors/jquery/dist/jquery.min.js"></script>
+        <script src="~/Content/MainPage/vendors/jquery-validation/jquery-validation-1.19.2/dist/jquery.validate.min.js"></script>
+        <!-- Bootstrap -->
+        <script src="~/Content/MainPage/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+        <script src="~/Content/MainPage/vendors/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- bootstrap-progressbar -->
+        <script src="~/Content/MainPage/vendors/bootstrap-progressbar/bootstrap-progressbar.min.js"></script>
+        <!-- bootstrap-daterangepicker -->
+        <script src="~/Content/MainPage/vendors/moment/min/moment.min.js"></script>
+        <script src="~/Content/MainPage/vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
+
+
+    </environment>
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>
